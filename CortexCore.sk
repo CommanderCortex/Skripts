@@ -1,0 +1,694 @@
+# CortexMC Core Made by CommanderCortex
+#
+#
+#
+#
+#
+#
+#
+
+
+on join:
+	broadcast "&3&Cortex&b&lMC - &f&lCore &7&l> Starting!"
+
+on join:
+	permission: CortexAdmin
+	permission message:
+	trigger
+		if {cortex.config.config} is "{@configver}":
+			broadcast "&&3&Cortex&b&lMC - &f&lCore &7&l> &e{@configver} &7is up to date!"
+		else:
+			broadcast "&3&Cortex&b&lMC - &f&lCore &7&l> &7Your Config is not up to Date! Updating this shit for you!"
+			broadcast "&3&Cortex&b&lMC - &f&lCore &7&l> &7Config Re-Populated!"
+			broadcast "&3&Cortex&b&lMC - &f&lCore &7&l> &7Going to reload plugin now!"
+			broadcast "&3&Cortex&b&lMC - &f&lCore &7&l> &7Config Done!"
+
+
+
+
+
+#List Of Commands
+
+
+
+command /Cortex:
+	permission: CortexTrainee
+	permission message: &3&lCortexMC - Core> &cError!
+	trigger:
+		send ""
+		send "&3&Cortex&b&lMC - &f&lCore &7&l>"
+		send "&6/Announce &7| &eServer Hologram & Chat Announcement &7| &cAdmin"
+		send "&6/DeleteHistory &7| &ePurges Player Ban History &7| &cAdmin"
+		send "&6/Silence &7| &eSilences Chat &7| &cAdmin"
+		send "&6/cs &7| &eEnables Chat Slow &7| &cAdmin"
+		send "&6/mm &7| &eServer Maintenance Mode &7| &cAdmin"
+		send "&6/mc &7| &eToggles Chat Mute &7| &cAdmin"
+		send "&6/cc &7| &eClears Chat &7| &cAdmin"
+		send "&6/i &7| &eGive Command &7| &cAdmin"
+		send "&6/Admin &7| &e Admin Tools  &7| &cAdmin"
+		send "&6/g &7| &eChat Announcement &7| &bSr.Mod"
+		send "&6/gm &7| &eToggle Gamemode &7| &9Builder"
+		send "&6/n &7| &eCustom Nick &7| &bStaff"
+		send "&6/2fa &7| &eEnable 2 Factor Auth &7| &bStaff"
+		send "&6/p &7| &eGUI Punish Menu (Runs Over LiteBans) &7| &bStaff"
+		send "&6/q &7| &eStaff Req &7| &eALL"
+		send "&6/Ranks &7| &eDisplay all Ranks &7| &eALL"
+		send "&6/Pilsoa &7| &eDisplay all Custom Commands (This Menu) &7|"
+		send "&7&l&m->&r &7By: CommanderCortex & Paradaux &7&l&m<-"
+
+#Ignore
+command /pl:
+	trigger:
+		send "&c&lCortexMC - Core &7&l> &bPlugins:"
+		send "&bPilosaMC-Core&r, &bPilosaMC- Extras"
+command /rl:
+	trigger:
+		send "&3&lCortexMC - &fCore &7> &bReload is &cDisabled"
+command /reload:
+	trigger:
+		send "&3&lCortexMC&fCore &7> &bReload is &cDisabled"
+command /hi:
+	trigger:
+		send "&aWhy hello there."
+command /hello:
+  trigger:
+    send "&aWhy hello there."
+command /op:
+	trigger:
+		send "&3&lCortexMC - &fCore &7> &bThe OP Command has been &cDisabled"
+command /made:
+	trigger:
+		send "&3&lCortexMC - &fCore &7&l>"
+		send ""
+		send "&cAuthor: &eCommanderCortex & Paradaux"
+		send "&cVersion: &e1.4.7"
+
+#Announcement Function
+command /announce [<text>]:
+	aliases: /a
+	permission: CortexAdmin
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l> &7This requires Rank &6&lADMIN.
+	trigger:
+		if argument 1 is set:
+			send all players title "&c&lAnnouncement" with subtitle "&f%arg-1%" for 10 seconds
+			broadcast "&c&lAnnouncement &f&l&m>&r &b%arg-1%"
+		else:
+			if arg 1 is not set:
+				send "&3&Cortex&b&lMC - &f&lCore &7&l>  &aWrong Usage: &9/a [Message]"
+
+#Broadcast Function
+command /global [<text>]:
+	aliases: /g
+	permission: CortexMod
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l>  &7This requires Rank &5&lMOD.
+	trigger:
+		if arg 1 is not set:
+			send "&3&Cortex&b&lMC - &f&lCore &7&l>  &aWrong Usage: &9/g [Message]"
+		else:
+			broadcast "&c&lAnnouncement &f&l&m>&r &b%arg-1%"
+
+#On Join Function
+#on join:
+#	set join message to ""
+
+on join:
+	set join message to ""
+
+#On Quit Function
+on quit:
+	set quit message to ""
+
+#On Weather Function
+on weather change to rain or thunder:
+	cancel event
+
+#Chatslow Fuction
+command /chatslow [<integer>]:
+	aliases: /cs
+	permission: CortexMod
+	permission message: &9PilosaMC> &7This requires Permission Rank [&9SR.MOD&7].
+	trigger:
+		if {cortex.disguise.%player%} is set:
+			set {_p} to {cortex.disguise.%player%}
+		else:
+			set {_p} to player
+		if argument 1 is set:
+			if {cortex.chatsilence} is set:
+				send "&9PilosaMC> &7Chat is in silence mode. Disable silence mode to activate slow chat."
+				stop
+			else:
+				if {cortex.chatslow} is not set:
+					set {cortex.chatslow} to "%arg-2% seconds" parsed as timespan
+					send "&9PilosaMC> &6%{_p}% &7has set the chat delay to &6%arg-1%&7 seconds." to all players
+				else:
+					set {cortex.chatslow} to "%arg-2% seconds" parsed as timespan
+					send "&9PilosaMC> &6%{_p}% &7has enabled chat slow." to all players
+					send "&9PilosaMC> &6%{_p}% &7has set the chat delay to &6%arg-1%&7 seconds." to all players
+		else:
+			if {cortex.chatsilence} is set:
+				send "&9PilosaMC> &7Chat is in silence mode. Disable silence mode to activate slow chat."
+				stop
+			else:
+				if {cortex.chatslow} is set:
+					delete {cortex.chatslow}
+					send "&9PilosaMC> &6%{_p}% &7has disabled chat slow." to all players
+				else:
+					send "&9PilosaMC> &cYou didn't enter a time limit! Defaulting to 10 seconds."
+					set {cortex.chatslow} to "10 seconds" parsed as timespan
+					send "&9PilosaMC> &6%{_p}% &7has enabled chat slow." to all players
+					send "&9PilosaMC> &6%{_p}% &7has set the chat delay to &610 &7seconds." to all players
+command /silence:
+	permission: CortexAdmin
+	permission message: &9Permissions> &7This requires Permission Rank [&9ADMIN&7].
+	trigger:
+		if {cortex.chatslow} is set:
+			delete {cortex.chatslow}
+			send "&9PilosaMC> &6%player% &7has disabled chat slow." to all players
+			set {cortex.chatsilence} to true
+			send "&9PilosaMC> &7The chat has been silenced for &aPermanent&7." to all players
+			stop
+		if {cortex.chatsilence} is set:
+			delete {cortex.chatsilence}
+			send "&9PilosaMC> &7The chat is no longer silenced." to all players
+		else:
+			set {cortex.chatsilence} to true
+			send "&9PilosaMC> &7The chat has been silenced for &aPermanent&7." to all players
+
+#Clear Chat Function
+command /cc:
+	permission: CortexAdmin
+	permission message: &3&lCortexMC&f - &lCore &7&l> &7This requires Rank &6&lADMIN.
+	trigger:
+		loop 300 times:
+			broadcast " "
+		broadcast "&3&lCortexMC &7&l> &aChat Has Been Cleared!"
+#Purge Ban History
+command /deletehistory [<offline player>]:
+	permission: CortexPurge
+	permission message: &9Permissions> &7This requires Rank [&9Manager&7].
+	trigger:
+		if arg-1 is set:
+			send "&3&lCortexMC &7&l> &7Deleting history of &e%arg-1%&7..."
+			delete {p.%arg-1%::*}
+			delete {punishgui.%arg-1%::*}
+			delete {reversed.p.%arg-1%::history::*}
+			delete {reversed.p.%arg-1%::*}
+			wait 1 second
+			send "&3&lCortexMC &7&l> &7All done!"
+		else:
+			send "&3&lCortexMC &7&l> &7... Who's history do you want to delete?"
+#Gamemode Command For BUILDERS
+command /gm [<player>]:
+	permission: CortexGM
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l> &7This requires Rank &9&lBUILDER.
+	trigger:
+		if argument 1 is not set:
+			if player's gamemode is survival:
+				set the player's gamemode to creative
+				send "&3&lCortexMC &7&l> &aCreative Mode Activated"
+			else:
+				set the player's gamemode to survival
+				send "&3&lCortexMC &7&l> &cSurvival Mode Activated"
+		else:
+			if player has permission "cortex.gm":
+				if arg-1's gamemode is survival:
+					set the arg-1's gamemode to creative
+					send "&3&lCortexMC &7&l> Creative Mode: &aTrue"
+				else:
+					set the arg-1's gamemode to survival
+					send "&3&lCortexMC &7&l> &cSurvival Mode Activated"
+			else:
+				send "&3&lCortexMC &7&l> &7This requires Rank &9&lBUILDER."
+#Give Command Made By CommanderCortex (Chris Cotton)
+command /i [<string>] [<string>] [<string>] [<string>] [<string>]:
+	aliases: /g, /item, /give
+	permission: CortexAdmin
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l> &7This requires Rank &6&lADMIN.
+	trigger:
+		if arg 1 is not set:
+			send "&3&lCortexMC &7&l> &7Listing Commands:"
+			send "&4/give (item) Admin"
+			send "&4/give (player) (item) (amount) Admin"
+			send "&4/give (player) (item) (amount) (Enchantment:level) Admin"
+			send "&4/give all (item) (amount) Admin"
+			send "&4/give all (item) (amount) (Enchantment:level) Admin"
+		else:
+			if arg 2 is not set:
+				set {_i1} to "%arg-1%"
+				replace all "_" with " " in {_i1}
+				set {_i} to "%{_i1}%" parsed as an item
+				if {_i} is an item:
+					send "&9Give> &7You gave &e1 %{_i}% &7to &e%player%&7."
+					give player {_i}
+				else:
+					send "&9Item Search> &e0 &7matches for [&e%arg-1%&7]."
+					send "&9Item(s) Search> &7Invalid [&e%arg-1%&7]."
+		if arg 2 is set:
+			if arg 3 is set:
+				if arg 1 is "all":
+					set {_i1} to "%arg-2%"
+					replace all "_" with " " in {_i1}
+					set {_i} to "%{_i1}%" parsed as an item
+					set {_a} to "%arg-3%" parsed as a number
+					if {_i} is an item:
+						if {_a} is a number:
+							send "&9Give> &7You gave &e%{_a}% %{_i}% &7to &eALL&7."
+							send "&9Give> &7You received &e%{_a}% %{_i}% &7from &e%player%&7." to all players
+							loop all players:
+								loop {_a} times:
+									give loop-player {_i}
+						else:
+							send "&9Give> &7Invalid Amount [%arg-3%]. Defaulting to [1]."
+							send "&9Give> &7You gave &e1 %{_i}% &7to &eALL&7."
+							send "&9Give> &7You received &e1 %{_i}% &7from &e%player%&7." to all players
+							loop all players:
+								give loop-player {_i}
+					else:
+						send "&9Item Search> &e0 &7matches for [&e%{_i1}%&7]."
+						send "&9Item(s) Search> &7Invalid [&e%{_i}%&7]."
+				else:
+					set {_i1} to "%arg-2%"
+					replace all "_" with " " in {_i1}
+					set {_i} to "%{_i1}%" parsed as an item
+					set {_a} to "%arg-3%" parsed as a number
+					set {_p} to "%arg-1%" parsed as a player
+					if {_i} is an item:
+						if {_p} is online:
+							if {_a} is a number:
+								send "&9Give> &7You gave &e%{_a}% %{_i}% &7to &e%{_p}%&7."
+								send "&9Give> &7You received &e%{_a}% %{_i}% &7from &e%player%&7." to {_p}
+								loop {_a} times:
+									give {_p} {_i}
+							else:
+								send "&9Give> &7Invalid Amount [%arg-3%]. Defaulting to [1]."
+								send "&9Give> &7You gave &e1 %{_i}% &7to &e%{_p}%&7."
+								send "&9Give> &7You received &e1 %{_i}% &7from &e%player%&7." to {_p}
+								give {_p} {_i}
+						else:
+							send "&9Online Player Search> &e0 &7matches for [&e%arg-1%&7]."
+							send "&9Online Player(s) Search> &7Invalid [&e%arg-1%&7]."
+							stop
+					else:
+						send "&9Item Search> &e0 &7matches for [&e%arg-2%&7]."
+						send "&9Item(s) Search> &7Invalid [&e%arg-2%&7]."
+			else:
+				if arg 1 is "all":
+					set {_i1} to "%arg-2%"
+					replace all "_" with " " in {_i1}
+					set {_i} to "%{_i1}%" parsed as an item
+					if {_i} is an item:
+						send "&9Give> &7You gave &e1 %{_i}% &7to &eALL&7."
+						send "&9Give> &7You received &e1 %{_i}% &7from &e%player%&7." to all players
+						loop all players:
+							give loop-player {_i}
+					else:
+						send "&9Item Search> &e0 &7matches for [&e%arg-2%&7]."
+						send "&9Item(s) Search> &7Invalid [&e%arg-2%&7]."
+				else:
+					set {_i1} to "%arg-2%"
+					replace all "_" with " " in {_i1}
+					set {_i} to "%{_i1}%" parsed as an item
+					set {_p} to "%arg-1%" parsed as a player
+					if {_i} is an item:
+						if {_p} is online:
+							send "&9Give> &7You gave &e1 %{_i}% &7to &e%{_p}%&7."
+							send "&9Give> &7You received &e1 %{_i}% &7from &e%player%&7." to {_p}
+							give {_p} {_i}
+						else:
+							send "&9Online Player Search> &e0 &7matches for [&e%arg-1%&7]."
+							send "&9Online Player(s) Search> &7Invalid [&e%arg-1%&7]."
+							stop
+					else:
+						send "&9Item Search> &e0 &7matches for [&e%arg-2%&7]."
+						send "&9Item(s) Search> &7Invalid [&e%arg-2%&7]."
+# cortexCore Maintenance Command - Stop all non-members from entering the server whilse in maintenance mode!
+# Made by Dayem (Harvey#5048) & CommanderCortex (Chris Cotton)
+# ""
+
+command /mm:
+	permission: cortex.mm
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l>&cYou don’t have that command!
+	trigger:
+		if {cortex.maintenance} is not set:
+			set {cortex.maintenance} to "true"
+			set {mm.check} to "true"
+			send "&3&lCortexMC &7&l> &7Maintenance Mode has been &aActivated&7!"
+		else if {cortex.maintenance} is "true":
+			set {cortex.maintenance} to "false"
+			set {mm.check} to "false"
+			send "&3&lCortexMC &7&l> &7Maintenance Mode has been &cDe-Activated&7!"
+			stop
+		else if {cortex.maintenance} is "false":
+			set {cortex.maintenance} to "true"
+			set {mm.check} to "true"
+			send "&3&lCortexMC &7&l> &7Maintenance Mode has been &aActivated&7!"
+on join:
+	if has permission "cortex.mm.exempt":
+		if {cortex.maintenance} is "true":
+			send "&3&lCortexMC &7&l> &aSkyblock &7is currently in &amaintenance&7 mode!"
+	else if {mm.check} is "true":
+		wait 1 second
+		kick the player due to "&3&lCortexMC &7&l> &aSkyblock &7is currently in &aMaintenance Mode&7!"
+	else if {mm.check} is "false":
+		send ""
+#Mute Chat Function
+command /mc:
+	permission: CortexAdmin
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l> &7This requires Rank &6&lADMIN.
+	trigger:
+		if {cortex.silence} is not set:
+			set {cortex.silence} to "true"
+			broadcast "&3&lCortexMC &7&l> &c&lServer Chat has been muted!"
+		else if {cortex.silence} is "true":
+			set {cortex.silence} to "false"
+			broadcast "&3&lCortexMC &7&l> &a&lServer Chat has been unmuted!"
+		else if {cortex.silence} is "false":
+			set {cortex.silence} to "true"
+			broadcast "&3&lCortexMC &7&l> &c&lServer Chat has been muted!"
+
+#On Chat Function
+on chat:
+	# if player has permission "CortexAdmin"
+
+	if {cortex.silence} is "true":
+		message "&f&m-------------------------------------------"
+		message "            &a Chat is currently muted!"
+		message "&f&m-------------------------------------------"
+		cancel event
+
+#Nick Function
+command /n [<text>]:
+	trigger:
+		if {is-nicked.%player%} is not set:
+			set {is-nicked.%player%} to false
+		if arg 1 is not set:
+			if {is-nicked.%player%} is true:
+				set player's display name to "%player's name%"
+				set the player's tablist name to "%player's name%"
+				send "&3&lCortexMC &7&l> Nick Reset"
+				set {is-nicked.%player%} to false
+			else:
+				send "&3&lCortexMC &7&l> You are not nicked. Use /n <text>"
+			stop
+		else:
+			set player's display name to "%arg 1%"
+			set the player's tablist name to "%arg 1%"
+			send "&3&lCortexMC &7&l> Your nickname has been changed to ""%arg 1%"""
+			set {is-nicked.%player%} to true
+
+#Play Time Function
+command /ptime [<offline player>] [<string>]:
+	permission: cortex.ptime
+	permission message: &3&Cortex&b&lMC - &f&lCore &7&l> &7This requires Rank [&9MOD&7].
+	trigger:
+		if arg 1 is not set:
+			send "&3&lCortexMC &7&l> &cUsage: &6/time <user>"
+		else:
+			if {cortex.time.%arg-1%} is not set:
+				set {cortex.time.%arg-1%} to 0
+				send "&9Time> &e%arg-1% &7has spent &e%{cortex.time.%arg-1%}%.0 Seconds &7in game"
+			else:
+				set {_tm} to {cortex.time.%arg-1%}
+				if {_tm} is less than 60:
+					send "&9Time> &e%arg-1% &7has spent &e%{_tm}%.0 Seconds &7in game"
+					stop
+				else if {_tm} is less than 3600:
+					set {_final} to {_tm} / 60
+					send "&9Time> &e%arg-1% &7has spent &e%{_final}% Minutes &7in game"
+					stop
+				else if {_tm} is less than 86400:
+					set {_final} to {_tm} / 3600
+					send "&9Time> &e%arg-1% &7has spent &e%{_final}% Hours &7in game"
+					stop
+				else if {_tm} is less than 604800:
+					set {_final} to {_tm} / 86400
+					send "&9Time> &e%arg-1% &7has spent &e%{_final}% Days &7in game"
+					stop
+				else:
+					set {_final} to {_tm} / 604800
+					send "&9Time> &e%arg-1% &7has spent &e%{_final}% Weeks &7in game"
+
+command /ranks:
+	trigger:
+		send "&6----------------------------------------------------"
+		send "&3&lCortexMC &7&l> &aList Of Ranks:"
+		send "&6----------------------------------------------------"
+		send "&4&lOWNER&r / &3FOUNDER: &fOwners & Founders are the Care Takers of CortexMC. Each Owner manages a different aspect of CortexMC to ensure its efficient operation."
+		send "&6----------------------------------------------------"
+		send "&4&lMANAGER&r: &fManagers manage the operation of their respective Team. They usually operate on affairs within the staff, development, or management team."
+		send "&6----------------------------------------------------"
+		send "&c&lADMIN&r: &fAdmins are responisible for managing our moderator team. They also help with staff support"
+		send "&6----------------------------------------------------"
+		send "&5&lDEV&r: &fDevelopers work behind the scenes to create new games and features, and fix bugs to give the best experience. They can be AFK alot in game!"
+		send "&6----------------------------------------------------"
+		send "&6&lSR.MOD&r: &fSenior Moderators are members of a Senior Moderators team where they have to fulfull specific tasks. Just like Moderators, you can always ask them for help. For assistance, contact them using &e/q <message>&f."
+		send "&6----------------------------------------------------"
+		send "&6&lMOD&r / &b&lHELPER&r: &fModerators and Helpers enforce rules and provide help to anyone with questions or concerns. For assistance, contact them using &e/q <message>&f."
+		send "&6----------------------------------------------------"
+		send "&b&lTRAINEE&r: &fTrainees Are our staff in training"
+		send "&6----------------------------------------------------"
+		send "&9&lBUILDER&r: &fBuilders are members of the CortexMC Build Team. They create many of the maps used across CortexMC."
+		send "&6----------------------------------------------------"
+
+
+#staff help
+command /q [<text>]:
+    trigger:
+        if arg 1 is not set:
+            message "&c&lHelp&f&lReq &7&l> &cYou must type a message!"
+            stop
+        if arg 1 is set:
+            message "&c&lHelp&f&lReq &7&l> &c Your message has been sent"
+            stop
+        player has permission "CortexTrainee":
+            log "&c&lHelp&f&lReq &7&l> %player% &7%arg%" to "staffchat/messages.log"
+            loop all players:
+                loop-player has permission "CortexTrainee"
+                send message "&c&lHelp&f&lReq &7&l> %player% &7%arg%" to loop-player
+        else:
+            stop
+
+
+#--------------------------------------#
+#	     Punishment GUI
+#			  by CommanderCortex
+#       (Credit to Paradaux for the help <3)
+#--------------------------------------#
+command /p [<offline player>] [<text>]:
+	aliases: /punish
+	permission: CortexTrainee
+	permission message: &3&lCortexMC &7&l> &7This requires Permission Rank [&9TRAINEE&7].
+	trigger:
+		if arg-2 is not set:
+			send "&3&lCortexMC &7&l> &7Commands List:"
+			send "&6/punish &7<player> <reason> &6Mod"
+		if arg-2 is set:
+			if {p.%arg-1%::Chat1} is not set:
+				set {p.%arg-1%::Client3} to "tempban %arg-1% 30d"
+				set {p.%arg-1%::ClientL3} to "&fBan Duration: &e30.0 Days"
+				set {p.%arg-1%::Client2} to "tempban %arg-1% 30d"
+				set {p.%arg-1%::ClientL2} to "&fBan Duration: &e30.0 Days"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &e1.0 Days"
+				set {p.%arg-1%::Client1} to "tempban %arg-1% 1d"
+				set {p.%arg-1%::General} to "tempban %arg-1% 4h"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e4.0 Hours"
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 2h"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e2.0 Hours"
+				set {p.%arg-1%::Chat2} to "tempmute %arg-1% 1d"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &e1.0 Days"
+				set {p.%arg-1%::Chat3} to "tempmute %arg-1% 30d"
+				set {p.%arg-1%::ChatL3} to "&fMute Duration: &e30.0 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 1:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 4h"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e4.0 Hours"
+			if {p.%arg-1%::pOffences.Chat1} is 2:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 10h"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e10.0 Hours"
+			if {p.%arg-1%::pOffences.Chat1} is 3:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 1d"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e1.0 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 4:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 1.4d"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e1.4 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 5:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 2.8d"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e2.8 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 6:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 7d"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e7.0 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 7:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 14d"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e14.0 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 8:
+				set {p.%arg-1%::Chat1} to "tempmute %arg-1% 30d"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &e30.0 Days"
+			if {p.%arg-1%::pOffences.Chat1} is 9:
+				set {p.%arg-1%::Chat1} to "mute %arg-1%"
+				set {p.%arg-1%::ChatL1} to "&fMute Duration: &ePermanent"
+			if {p.%arg-1%::pOffences.Chat2} is 1:
+				set {p.%arg-1%::Chat2} to "tempmute %arg-1% 2d"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &e2.0 Days"
+			if {p.%arg-1%::pOffences.Chat2} is 2:
+				set {p.%arg-1%::Chat2} to "tempmute %arg-1% 4d"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &e4.0 Days"
+			if {p.%arg-1%::pOffences.Chat2} is 3:
+				set {p.%arg-1%::Chat2} to "tempmute %arg-1% 7d"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &e7.0 Days"
+			if {p.%arg-1%::pOffences.Chat2} is 4:
+				set {p.%arg-1%::Chat2} to "tempmute %arg-1% 14d"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &e14.0 Days"
+			if {p.%arg-1%::pOffences.Chat2} is 5:
+				set {p.%arg-1%::Chat2} to "tempmute %arg-1% 30d"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &e30.0 Days"
+			if {p.%arg-1%::pOffences.Chat2} is 6:
+				set {p.%arg-1%::Chat2} to "mute %arg-1%"
+				set {p.%arg-1%::ChatL2} to "&fMute Duration: &ePermanent"
+			if {p.%arg-1%::pOffences.Chat3} is 1:
+				set {p.%arg-1%::Chat3} to "mute %arg-1%"
+				set {p.%arg-1%::ChatL3} to "&fMute Duration: &ePermanent"
+			if {p.%arg-1%::pOffences.General} is 1:
+				set {p.%arg-1%::General} to "tempban %arg-1% 8h"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e8.0 Hours"
+			if {p.%arg-1%::pOffences.General} is 2:
+				set {p.%arg-1%::General} to "tempban %arg-1% 16h"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e16.0 Hours"
+			if {p.%arg-1%::pOffences.General} is 3:
+				set {p.%arg-1%::General} to "tempban %arg-1% 1.4d"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e1.4 Days"
+			if {p.%arg-1%::pOffences.General} is 4:
+				set {p.%arg-1%::General} to "tempban %arg-1% 3d"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e3.0 Days"
+			if {p.%arg-1%::pOffences.General} is 5:
+				set {p.%arg-1%::General} to "tempban %arg-1% 7d"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e7.0 Days"
+			if {p.%arg-1%::pOffences.General} is 6:
+				set {p.%arg-1%::General} to "tempban %arg-1% 14d"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e14.0 Days"
+			if {p.%arg-1%::pOffences.General} is 7:
+				set {p.%arg-1%::General} to "tempban %arg-1% 30d"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &e30.0 Days"
+			if {p.%arg-1%::pOffences.General} is 8:
+				set {p.%arg-1%::General} to "ban %arg-1%"
+				set {p.%arg-1%::GeneralL} to "&fBan Duration: &ePermanent"
+
+			if {p.%arg-1%::pOffences.Client1} is 1:
+				set {p.%arg-1%::Client1} to "tempban %arg-1% 2d"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &e2.0 Days"
+			if {p.%arg-1%::pOffences.Client1} is 2:
+				set {p.%arg-1%::Client1} to "tempban %arg-1% 4d"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &e4.0 Days"
+			if {p.%arg-1%::pOffences.Client1} is 3:
+				set {p.%arg-1%::Client1} to "tempban %arg-1% 7d"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &e7.0 Days"
+			if {p.%arg-1%::pOffences.Client1} is 4:
+				set {p.%arg-1%::Client1} to "tempban %arg-1% 16d"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &e16.0 Days"
+			if {p.%arg-1%::pOffences.Client1} is 5:
+				set {p.%arg-1%::Client1} to "tempban %arg-1% 30d"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &e30.0 Days"
+			if {p.%arg-1%::pOffences.Client1} is 6:
+				set {p.%arg-1%::Client1} to "ban %arg-1%"
+				set {p.%arg-1%::ClientL1} to "&fBan Duration: &ePermanent"
+			if {p.%arg-1%::pOffences.Client2} is 1:
+				set {p.%arg-1%::Client2} to "ban %arg-1%"
+				set {p.%arg-1%::ClientL2} to "&fBan Duration: &ePermanent"
+			if {p.%arg-1%::pOffences.Client3} is 1:
+				set {p.%arg-1%::Client3} to "ban %arg-1%"
+				set {p.%arg-1%::ClientL3} to "&fBan Duration: &ePermanent"
+			if {p.%arg-1%::pOffences.Chat1} is not set:
+				set {p.%arg-1%::pOffences.Chat1} to 0
+				set {p.%arg-1%::pOffences.Chat2} to 0
+				set {p.%arg-1%::pOffences.Chat3} to 0
+				set {p.%arg-1%::pOffences.General} to 0
+				set {p.%arg-1%::pOffences.Client1} to 0
+				set {p.%arg-1%::pOffences.Client2} to 0
+				set {p.%arg-1%::pOffences.Client3} to 0
+			if player has permission "CortexTrainee" or "CortexMod": #Access to only severity 1 punishments!
+				delete {reversed.p.%arg-1%::history::*}
+				set {_slot} to 0
+				loop {p.%arg-1%::history::*}:
+					add 1 to {_slot}
+				set {_reversedslot} to 1
+				loop {p.%arg-1%::history::*}:
+					set {reversed.p.%arg-1%::history::%{_reversedslot}%} to "%{p.%arg-1%::history::%{_slot}%}%"
+					remove 1 from {_slot}
+					add 1 to {_reversedslot}
+				open chest with 6 rows named "            Punish" to player
+				wait 3 tick
+				format slot 4 of player with arg-1's skull named "&a&l%arg-1%" with lore "&r%arg-2%||||&bGUI by CommanderCortex" to be unstealable
+
+				format slot 10 of player with book and quill named "&a&lChat Offense" with lore "&7Verbal Abuse, Spam, Harrassment, Trolling, etc" to be unstealable
+				format slot 19 of player with cactus green named "&a&lSeverity 1" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.Chat1}%||%{p.%arg-1%::ChatL1}%||||&7Light Spam||&f   Sending the same message 2-5 times||||&7Light Advertising||&f   'anyone want to play on &3&lServerName?'||||&7Light Abuse/Harassment||&f   'you suck at this game'||||&7Hackusations||&f   'you're such a hacker!'||||&7Trolling||||&2Give Warning if 0 Past Offences and 0 Warnings." to close then run [make player execute command "%{p.%arg-1%::Chat1}% %arg-2%"]->[add "&ePunishment Type: &fChatOffense||&eSeverity: &f1||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.Chat1}]
+
+				format slot 12 of player with hopper named "&a&lGeneral Offense" with lore "&7Command/Map/Class/Skill exploits, etc" to be unstealable
+				format slot 21 of player with cactus green named "&a&lSeverity 1" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.General}%||%{p.%arg-1%::GeneralL}%||||&7Team Killing||&f   Intentionally killing your team mates||||&7Trolling (Gameplay)||&f   Using abilities to trap players in spawn||||&7Map/Bug Exploiting||&f   Abusing an exploit to gain an advantage" to close then run [make player execute command "%{p.%arg-1%::General}% %arg-2%"]->[add "&ePunishment Type: &fExploiting||&eSeverity: &f1||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.General}]
+
+				format slot 14 of player with iron sword named "&a&lClient Mod" with lore "&7X-ray, Forcefield, Speed, Fly, Inventory Hacks, etc" to be unstealable
+				format slot 23 of player with cactus green named "&a&lSeverity 1" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.Client1}%||%{p.%arg-1%::ClientL1}%||||&7Examples;||&f   Damage Indicators||&f   Player Radar" to close then run [make player execute command "%{p.%arg-1%::Client1}% %arg-2%"]->[add "&ePunishment Type: &fHacking||&eSeverity: &f1||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.Client1}]
+
+				format slot 25 of player with paper named "&a&lWarning" with lore "||&7Example Warning Input;||&f   Spam - Repeatedly writing MEOW||&f   Swearing - Saying 'fuck' and 'shit'||&f   Hack Accusation - Accused Tomp13 of hacking||&f   Trolling - was trying to make bob angry in chat" to close then run [make player execute command "warn %arg-1% %arg-2%"]->[add "&ePunishment Type: &fWarning||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]
+				set {_slot} to 45
+				loop {reversed.p.%arg-1%::history::*}:
+					set {punishgui.%player%::*} to "%arg 1%"
+					add "%arg 2%" to {punishgui.%player%::*}
+					if "%loop-value%" contains "&ePunishment Type: &fChatOffense":
+						set slot {_slot} of player's current inventory to book and quill named "&a&lChat Offense" with lore "%loop-value%"
+						add 1 to {_slot}
+					if "%loop-value%" contains "&ePunishment Type: &fHacking":
+						set slot {_slot} of player's current inventory to iron sword named "&a&lClient Mod" with lore "%loop-value%"
+						add 1 to {_slot}
+					if "%loop-value%" contains "&ePunishment Type: &fExploiting":
+						set slot {_slot} of player's current inventory to hopper named "&a&lGeneral Offense" with lore "%loop-value%"
+						add 1 to {_slot}
+					if "%loop-value%" contains "&ePunishment Type: &fWarning":
+						set slot {_slot} of player's current inventory to paper named "&a&lWarning" with lore "%loop-value%"
+						add 1 to {_slot}
+					if "%loop-value%" contains "&ePunishment Type: &fOther":
+						set slot {_slot} of player's current inventory to redstone block named "&a&lPermanent Ban" with lore "%loop-value%"
+						add 1 to {_slot}
+					if "%loop-value%" contains "&ePunishment Type: &rOther":
+						set slot {_slot} of player's current inventory to enchanted book named "&a&lPermanent Report Ban" with lore "%loop-value%"
+						add 1 to {_slot}
+					if {_slot} = 54:
+						exit loop
+				if player has permission "CortexMod": #Access all punishments!
+					format slot 28 of player with dandelion yellow named "&a&lSeverity 2" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.Chat2}%||%{p.%arg-1%::ChatL2}%||||&7Medium Spam||   &fSending the same message 6-20 times||||&7Medium Advertising;||   &f'join crap.server.net' - posted once||||&7Medium Abuse/Harassment||   &f'piss off you stupid newb'||   &f'SHIT ADMINS ARE SHIT!!!'||   &f'you're terrible, learn to play'||||&7Avoiding Chat Filter||   &f'F|_|<K YOU'" to close then run [make player execute command "%{p.%arg-1%::Chat2}% %arg-2%"]->[add "&ePunishment Type: &fChatOffense||&eSeverity: &f2||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.Chat2}]
+					format slot 37 of player with rose red named "&a&lSeverity 3" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.Chat3}%||%{p.%arg-1%::ChatL3}%||||&7Severe Spam||   &fSending the same message 20+ times||   &fOnly really used for a spam bot||||&7Severe Abuse/Harassment||   &f'go fucking die in a fire you fucking sack of shit'" to close then run [make player execute command "%{p.%arg-1%::Chat3}% %arg-2%"]->[add "&ePunishment Type: &fChatOffense||&eSeverity: &f3||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.Chat3}]
+
+					format slot 32 of player with dandelion yellow named "&a&lSeverity 2" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.Client2}%||%{p.%arg-1%::ClientL2}%||||&7Hacks;||   &fForcefield||   &fSpeed Hack||   &fReach Hack||   &fOther Hack||||&7Hack Reports (SR & FR);||   &fForcefield||   &fSpeed Hack||   &fReach Hack||   &fOther Hack||   &fFly Hack" to close then run [make player execute command "%{p.%arg-1%::Client2}% %arg-2%"]->[add "&ePunishment Type: &fHacking||&eSeverity: &f2||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.Client2}]
+					format slot 41 of player with rose red named "&a&lSeverity 3" with lore "&fPast Offences: &e%{p.%arg-1%::pOffences.Client3}%||%{p.%arg-1%::ClientL3}%||||&7Hacks:||   &fFly Hack||||&c&lWARNING;||&cUse Severity 2 for Forum/Staff Reports" to close then run [make player execute command "%{p.%arg-1%::Client3}% %arg-2%"]->[add "&ePunishment Type: &fHacking||&eSeverity: &f3||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]->[add 1 to {p.%arg-1%::pOffences.Client3}]
+
+					format slot 43 of player with book and quill named "&a&lPermanent Mute" with lore "&fMute Duration: &ePermanent||||&7Severe Advertising;||&f   'JOIN MINECADE! THIS SUCKS!||&f   'join crap.server.net! FREE ADMIN!||||&2Must supply detailed reason for Mute." to close then run [make player execute command "mute %arg-1% %arg-2%"]->[add "&ePunishment Type: &fChatOffense||&eSeverity: &f4||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]
+					format slot 34 of player with redstone block named "&a&lPermanent Ban" with lore "&fBan Duration: &ePermanent||||&2Must supply detailed reason for Ban." to close then run [make player execute command "ban %arg-1% %arg-2%"]->[add "&ePunishment Type: &fOther||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]
+					format slot 26 of player with enchanted book named "&a&lPermanent Report Ban" with lore "&fReport Ban Duration: &ePermanent||||&7Abusing Report Feature||   &r/report SomeUser THE STAFF HERE SUCK||   &r/report SomeUser MINEPLEX IS A F****** PIECE OF S***" to close then run [make player execute command "ban %arg-1% %arg-2%"]->[add "&ePunishment Type: &rOther||||&eReason: &f%arg-2%||||&eStaff: &f%player%||||&eDate: &f%now%" to {p.%arg-1%::history::*}]
+				if player has permission "Rank.DEVELOPER": #Developer Warning
+					format slot 0 of player with shiny dandelion named "&a&lDEV WARNING" with lore "&rDevelopers are advised against using the punish system||&runless permitted by LT" to be unstealable
+
+
+on inventory click:
+	if inventory name of player's current inventory is "            Punish":
+		cancel event
+		clicked slot >= 45
+		set {_clickedslot.%player%} to (clicked slot - 44)
+		if {reversed.p.%{punishgui.%player%::1}%::history::%{_clickedslot.%player%}%} is set:
+			if "%{reversed.p.%{punishgui.%player%::1}%::history::%{_clickedslot.%player%}%}%" contains "&eRemoved by: ":
+				send "" to console
+			else:
+				set {_reasonchanger.%player%} to "%{reversed.p.%{punishgui.%player%::1}%::history::%{_clickedslot.%player%}%}% ||||&eRemoved by: &f%player%||&eRemove Reason: &f%{punishgui.%player%::2}%"
+				set {reversed.p.%{punishgui.%player%::1}%::history::%{_clickedslot.%player%}%} to "%{_reasonchanger.%player%}%"
+				close player's inventory
+				delete {p.%{punishgui.%player%::1}%::history::*}
+				set {_slot} to 0
+				loop {reversed.p.%{punishgui.%player%::1}%::history::*}:
+					add 1 to {_slot}
+				set {_reversedslot} to 1
+				loop {reversed.p.%{punishgui.%player%::1}%::history::*}:
+					set {p.%{punishgui.%player%::1}%::history::%{_reversedslot}%} to "%{reversed.p.%{punishgui.%player%::1}%::history::%{_slot}%}%"
+					remove 1 from {_slot}
+					add 1 to {_reversedslot}
+				if "%{_reasonchanger.%player%}%" contains "ChatOffense":
+					make player execute "unmute %{punishgui.%player%::1}%"
+				if "%{_reasonchanger.%player%}%" contains "Hacking" or "Exploiting" or "Other":
+					make player execute "unban %{punishgui.%player%::1}%"
+				if "%{_reasonchanger.%player%}%" contains "Warning":
+					make player execute "unwarn %{punishgui.%player%::1}%"
