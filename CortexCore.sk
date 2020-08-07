@@ -53,14 +53,14 @@ command /Cortex:
 		send "&6/p &7| &eGUI Punish Menu (Runs Over LiteBans) &7| &bStaff"
 		send "&6/q &7| &eStaff Req &7| &eALL"
 		send "&6/Ranks &7| &eDisplay all Ranks &7| &eALL"
-		send "&6/Pilsoa &7| &eDisplay all Custom Commands (This Menu) &7|"
+		send "&6/Cortex &7| &eDisplay all Custom Commands (This Menu) &7|"
 		send "&7&l&m->&r &7By: CommanderCortex & Paradaux &7&l&m<-"
 
 #Ignore
 command /pl:
 	trigger:
 		send "&c&lCortexMC - Core &7&l> &bPlugins:"
-		send "&bPilosaMC-Core&r, &bPilosaMC- Extras"
+		send "&bCortex-Core&r, &bPilosaMC- Extras"
 command /rl:
 	trigger:
 		send "&3&lCortexMC - &fCore &7> &bReload is &cDisabled"
